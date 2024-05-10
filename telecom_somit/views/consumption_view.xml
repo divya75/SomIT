@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_telecom_consumption_form" model="ir.ui.view">
+            <field name="name">telecom.consumption.form</field>
+            <field name="model">telecom.consumption</field>
+            <field name="arch" type="xml">
+                <form string="Telecom Consumption">
+                    <sheet>
+                        <group>
+                            <field name="timestamp"/>
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_telecom_consumption_tree_view" model="ir.ui.view">
+            <field name="name">consumption.tree</field>
+            <field name="model">telecom.consumption</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="timestamp"/>
+                    <field name="product_id"/>
+                    <field name="quantity"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_telecom_consumption_search" model="ir.ui.view">
+            <field name="name">telecom.consumption.search</field>
+            <field name="model">telecom.consumption</field>
+            <field name="arch" type="xml">
+                <search string="Accounts">
+                    <field name="timestamp"/>
+                    <separator/>
+                    <filter string="Last Month Consumption" name="timestamp"
+                            domain="[('timestamp', '&gt;=', (context_today() - relativedelta(day=1, months=1)).strftime('%Y-%m-%d')),
+                            ('timestamp', '&lt;=', (context_today() - relativedelta(day=1, days=-1)).strftime('%Y-%m-%d'))]"/>
+                    <separator/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_telecom_consumption_graph_view" model="ir.ui.view">
+            <field name="name">consumption.graph</field>
+            <field name="model">telecom.consumption</field>
+            <field name="arch" type="xml">
+                <graph string="Consumption Graph" type="bar">
+                    <field name="timestamp" type="row" interval="quarter"/>
+                    <field name="category_code" type="col" groupby="category_code"/>
+                    <field name="quantity" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+
+        <record id="action_telecom_consumption" model="ir.actions.act_window">
+            <field name="name">Telecom Consumption</field>
+            <field name="res_model">telecom.consumption</field>
+            <field name="view_mode">tree,form,graph</field>
+        </record>
+
+        <menuitem id="menu_telecom_consumption" name="Telecom Consumption" parent="stock.menu_stock_inventory_control"
+                  sequence="20"/>
+        <menuitem id="submenu_telecom_consumption" name="Consumptions" parent="menu_telecom_consumption"
+                  action="action_telecom_consumption"/>
+    </data>
+</odoo>
